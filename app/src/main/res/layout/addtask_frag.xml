@@ -79,7 +79,9 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:paddingTop="8dp"
-                        app:textDate="@{viewmodel.remindDate}"/>
+                        android:year="@={viewmodel.remindYear}"
+                        android:month="@={viewmodel.remindMonth}"
+                        android:day="@={viewmodel.remindDay}"/>
                 </LinearLayout>
             </ScrollView>
         </com.example.android.architecture.blueprints.todoapp.ScrollChildSwipeRefreshLayout>

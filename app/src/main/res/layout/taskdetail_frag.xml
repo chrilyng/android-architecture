@@ -108,14 +108,14 @@
                         android:text="@{viewmodel.task.description}"
                         android:textAppearance="?android:attr/textAppearanceMedium" />
 
-                    <com.example.android.architecture.blueprints.todoapp.addedittask.AddEditTaskDatePicker
-                        android:id="@+id/task_detail_schedule_date"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_below="@id/task_detail_description_text"
-                        android:layout_toRightOf="@id/task_detail_complete_checkbox"
-                        android:paddingTop="8dp"
-                        app:textDate="@{viewmodel.task.remindDate}"/>
+                    <!--<com.example.android.architecture.blueprints.todoapp.addedittask.AddEditTaskDatePicker-->
+                        <!--android:id="@+id/task_detail_schedule_date"-->
+                        <!--android:layout_width="match_parent"-->
+                        <!--android:layout_height="wrap_content"-->
+                        <!--android:layout_below="@id/task_detail_description_text"-->
+                        <!--android:layout_toRightOf="@id/task_detail_complete_checkbox"-->
+                        <!--android:paddingTop="8dp"-->
+                        <!--app:textDate="@{viewmodel.task.remindDate}"/>-->
                 </RelativeLayout>
             </LinearLayout>
         </com.example.android.architecture.blueprints.todoapp.ScrollChildSwipeRefreshLayout>

@@ -2,16 +2,16 @@ package dk.siit.todoschedule
 
 import android.widget.DatePicker
 import androidx.databinding.BindingAdapter
+import com.example.android.architecture.blueprints.todoapp.addedittask.AddEditTaskDatePicker
 import java.util.*
 
-//@BindingAdapter("app:textDate")
-//fun DatePicker.setTextDate(datePicker: DatePicker, date: Date?) {
-//    if (date != null) {
-//        val calendar: Calendar = Calendar.getInstance()
-//        calendar.time = date
-//
-//        datePicker.updateDate(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DATE))
-//    } else {
-//        datePicker.updateDate(2000, 1, 1)
-//    }
+// TODO rewrite this for TextView if that makes sense
+//@BindingAdapter("textDate")
+//fun AddEditTaskDatePicker.bindTextDate(date: Date?) {
+//    var updatedDate = date
+//    if (updatedDate == null)
+//        updatedDate = Date()
+//    val calendar: Calendar = Calendar.getInstance()
+//    calendar.time = updatedDate
+//    updateDate(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DATE))
 //}

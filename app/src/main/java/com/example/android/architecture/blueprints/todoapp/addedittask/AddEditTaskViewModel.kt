@@ -46,6 +46,10 @@ class AddEditTaskViewModel(
     // Two-way databinding, exposing MutableLiveData
     val remindDate = MutableLiveData<Date>()
 
+    val remindYear = MutableLiveData<Int>()
+    val remindMonth = MutableLiveData<Int>()
+    val remindDay = MutableLiveData<Int>()
+
     private val _dataLoading = MutableLiveData<Boolean>()
     val dataLoading: LiveData<Boolean> = _dataLoading
 
@@ -99,7 +103,13 @@ class AddEditTaskViewModel(
     private fun onTaskLoaded(task: Task) {
         title.value = task.title
         description.value = task.description
-        remindDate.value = task.remindDate
+        val remindDate = task.remindDate
+        var remindCalendar = Calendar.getInstance()
+        remindCalendar.time = remindDate
+        remindDay.value = remindCalendar.get(Calendar.DATE)
+        remindMonth.value = remindCalendar.get(Calendar.MONTH)
+        remindYear.value = remindCalendar.get(Calendar.YEAR)
+
         taskCompleted = task.isCompleted
         _dataLoading.value = false
         isDataLoaded = true
@@ -113,14 +123,21 @@ class AddEditTaskViewModel(
     fun saveTask() {
         val currentTitle = title.value
         val currentDescription = description.value
-        val remindDate = remindDate.value
+
+        val currentRemindYear = remindYear.value
+        val currentRemindMonth = remindMonth.value
+        val currentRemindDay = remindDay.value
+
+        var currentRemindDate = Date()
+        if (currentRemindDay != null && currentRemindMonth != null && currentRemindYear != null)
+            currentRemindDate = GregorianCalendar(currentRemindYear, currentRemindMonth, currentRemindDay).time
 
         if (currentTitle == null || currentDescription == null) {
             _snackbarText.value = Event(R.string.empty_task_message)
             _toastText.value = Event(R.string.empty_task_message)
             return
         }
-        if (Task(currentTitle, currentDescription, remindDate).isEmpty) {
+        if (Task(currentTitle, currentDescription, currentRemindDate).isEmpty) {
             _snackbarText.value = Event(R.string.empty_task_message)
             _toastText.value = Event(R.string.empty_task_message)
             return
@@ -128,9 +145,9 @@ class AddEditTaskViewModel(
 
         val currentTaskId = taskId
         if (isNewTask || currentTaskId == null) {
-            createTask(Task(currentTitle, currentDescription, remindDate))
+            createTask(Task(currentTitle, currentDescription, currentRemindDate))
         } else {
-            val task = Task(currentTitle, currentDescription, remindDate, taskCompleted, currentTaskId)
+            val task = Task(currentTitle, currentDescription, currentRemindDate, taskCompleted, currentTaskId)
             updateTask(task)
         }
     }
