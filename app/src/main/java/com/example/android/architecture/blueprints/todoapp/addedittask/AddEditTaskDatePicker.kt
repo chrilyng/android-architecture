@@ -14,10 +14,18 @@ class AddEditTaskDatePicker : DatePicker {
                 field = Date()
             val calendar: Calendar = Calendar.getInstance()
             calendar.time = textDate
-
-            updateDate(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DATE))
         }
 
+    init {
+        val currentTime = Date()
+        val currentCalendar = Calendar.getInstance()
+        currentCalendar.time = currentTime
+        val dateChangeListener = { view: DatePicker, year: Int, monthOfYear: Int, dayOfMonth: Int  ->
+            val updatedDate = GregorianCalendar(year, monthOfYear, dayOfMonth)
+            textDate = updatedDate.time
+        }
+        init( currentCalendar.get(Calendar.YEAR), currentCalendar.get(Calendar.MONTH), currentCalendar.get(Calendar.DATE), dateChangeListener)
+    }
 
 //    var textDate: String = ""
 //        set(date) {
