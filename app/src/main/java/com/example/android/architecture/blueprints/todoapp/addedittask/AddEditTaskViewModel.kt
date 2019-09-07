@@ -21,11 +21,14 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.android.architecture.blueprints.todoapp.Event
-import com.example.android.architecture.blueprints.todoapp.R
+import dk.siit.todoschedule.R
 import com.example.android.architecture.blueprints.todoapp.data.Result.Success
 import com.example.android.architecture.blueprints.todoapp.data.Task
 import com.example.android.architecture.blueprints.todoapp.data.source.TasksRepository
 import kotlinx.coroutines.launch
+import java.text.DateFormat
+import java.text.SimpleDateFormat
+import java.util.*
 
 /**
  * ViewModel for the Add/Edit screen.
@@ -40,11 +43,17 @@ class AddEditTaskViewModel(
     // Two-way databinding, exposing MutableLiveData
     val description = MutableLiveData<String>()
 
+    // Two-way databinding, exposing MutableLiveData
+    val remindDate = MutableLiveData<Date>()
+
     private val _dataLoading = MutableLiveData<Boolean>()
     val dataLoading: LiveData<Boolean> = _dataLoading
 
     private val _snackbarText = MutableLiveData<Event<Int>>()
     val snackbarText: LiveData<Event<Int>> = _snackbarText
+
+    private val _toastText = MutableLiveData<Event<Int>>()
+    val toastText: LiveData<Event<Int>> = _toastText
 
     private val _taskUpdatedEvent = MutableLiveData<Event<Unit>>()
     val taskUpdatedEvent: LiveData<Event<Unit>> = _taskUpdatedEvent
@@ -90,6 +99,7 @@ class AddEditTaskViewModel(
     private fun onTaskLoaded(task: Task) {
         title.value = task.title
         description.value = task.description
+        remindDate.value = task.remindDate
         taskCompleted = task.isCompleted
         _dataLoading.value = false
         isDataLoaded = true
@@ -103,21 +113,24 @@ class AddEditTaskViewModel(
     fun saveTask() {
         val currentTitle = title.value
         val currentDescription = description.value
+        val remindDate = remindDate.value
 
         if (currentTitle == null || currentDescription == null) {
             _snackbarText.value = Event(R.string.empty_task_message)
+            _toastText.value = Event(R.string.empty_task_message)
             return
         }
-        if (Task(currentTitle, currentDescription).isEmpty) {
+        if (Task(currentTitle, currentDescription, remindDate).isEmpty) {
             _snackbarText.value = Event(R.string.empty_task_message)
+            _toastText.value = Event(R.string.empty_task_message)
             return
         }
 
         val currentTaskId = taskId
         if (isNewTask || currentTaskId == null) {
-            createTask(Task(currentTitle, currentDescription))
+            createTask(Task(currentTitle, currentDescription, remindDate))
         } else {
-            val task = Task(currentTitle, currentDescription, taskCompleted, currentTaskId)
+            val task = Task(currentTitle, currentDescription, remindDate, taskCompleted, currentTaskId)
             updateTask(task)
         }
     }

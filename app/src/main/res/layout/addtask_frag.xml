@@ -68,12 +68,18 @@
                         android:id="@+id/add_task_description_edit_text"
                         android:background="@null"
                         android:layout_width="match_parent"
-                        android:layout_height="350dp"
+                        android:layout_height="150dp"
                         android:gravity="top"
                         android:hint="@string/description_hint"
                         android:imeOptions="flagNoExtractUi"
                         android:text="@={viewmodel.description}" />
 
+                    <com.example.android.architecture.blueprints.todoapp.addedittask.AddEditTaskDatePicker
+                        android:id="@+id/add_task_schedule_date"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:paddingTop="8dp"
+                        app:textDate="@{viewmodel.remindDate}"/>
                 </LinearLayout>
             </ScrollView>
         </com.example.android.architecture.blueprints.todoapp.ScrollChildSwipeRefreshLayout>
