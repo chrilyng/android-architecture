@@ -37,6 +37,7 @@ import org.junit.After
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
+import java.util.*
 
 /**
  * Integration test for the Task Details screen.
@@ -62,7 +63,7 @@ class TaskDetailFragmentTest {
     @Test
     fun activeTaskDetails_DisplayedInUi() {
         // GIVEN - Add active (incomplete) task to the DB
-        val activeTask = Task("Active Task", "AndroidX Rocks", false)
+        val activeTask = Task("Active Task", "AndroidX Rocks", Date(), false)
         repository.saveTaskBlocking(activeTask)
 
         // WHEN - Details fragment launched to display task
@@ -83,7 +84,7 @@ class TaskDetailFragmentTest {
     @Test
     fun completedTaskDetails_DisplayedInUi() {
         // GIVEN - Add completed task to the DB
-        val completedTask = Task("Completed Task", "AndroidX Rocks", true)
+        val completedTask = Task("Completed Task", "AndroidX Rocks", Date(), true)
         repository.saveTaskBlocking(completedTask)
 
         // WHEN - Details fragment launched to display task

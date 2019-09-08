@@ -50,6 +50,7 @@ import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
 import java.time.LocalDate
+import java.util.*
 
 /**
  * Large End-to-End test for the tasks module.
@@ -197,7 +198,7 @@ class TasksActivityTest {
     fun markTaskAsActiveOnDetailScreen_taskIsActiveInList() {
         // Add 1 completed task
         val taskTitle = "ACTIVE"
-        repository.saveTaskBlocking(Task(taskTitle, "DESCRIPTION", true))
+        repository.saveTaskBlocking(Task(taskTitle, "DESCRIPTION", Date(), true))
 
         // start up Tasks screen
         val activityScenario = ActivityScenario.launch(TasksActivity::class.java)
@@ -253,7 +254,7 @@ class TasksActivityTest {
     fun markTaskAsActiveAndCompleteOnDetailScreen_taskIsCompleteInList() {
         // Add 1 completed task
         val taskTitle = "COMP-ACT"
-        repository.saveTaskBlocking(Task(taskTitle, "DESCRIPTION", true))
+        repository.saveTaskBlocking(Task(taskTitle, "DESCRIPTION", Date(), true))
 
         // start up Tasks screen
         val activityScenario = ActivityScenario.launch(TasksActivity::class.java)

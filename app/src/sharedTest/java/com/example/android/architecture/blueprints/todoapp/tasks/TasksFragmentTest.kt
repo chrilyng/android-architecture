@@ -56,6 +56,7 @@ import org.mockito.Mockito.mock
 import org.mockito.Mockito.verify
 import org.robolectric.annotation.LooperMode
 import org.robolectric.annotation.TextLayoutMode
+import java.util.*
 
 /**
  * Integration test for the Task List screen.
@@ -112,7 +113,7 @@ class TasksFragmentTest {
 
     @Test
     fun displayCompletedTask() {
-        repository.saveTaskBlocking(Task("TITLE1", "DESCRIPTION1", true))
+        repository.saveTaskBlocking(Task("TITLE1", "DESCRIPTION1", Date(), true))
 
         launchActivity()
 
@@ -189,7 +190,7 @@ class TasksFragmentTest {
 
     @Test
     fun markTaskAsActive() {
-        repository.saveTaskBlocking(Task("TITLE1", "DESCRIPTION1", true))
+        repository.saveTaskBlocking(Task("TITLE1", "DESCRIPTION1", Date(), true))
 
         launchActivity()
 
@@ -212,7 +213,7 @@ class TasksFragmentTest {
     fun showAllTasks() {
         // Add one active task and one completed task
         repository.saveTaskBlocking(Task("TITLE1", "DESCRIPTION1"))
-        repository.saveTaskBlocking(Task("TITLE2", "DESCRIPTION2", true))
+        repository.saveTaskBlocking(Task("TITLE2", "DESCRIPTION2", Date(), true))
 
         launchActivity()
 
@@ -228,7 +229,7 @@ class TasksFragmentTest {
         // Add 2 active tasks and one completed task
         repository.saveTaskBlocking(Task("TITLE1", "DESCRIPTION1"))
         repository.saveTaskBlocking(Task("TITLE2", "DESCRIPTION2"))
-        repository.saveTaskBlocking(Task("TITLE3", "DESCRIPTION3", true))
+        repository.saveTaskBlocking(Task("TITLE3", "DESCRIPTION3", Date(), true))
 
         launchActivity()
 
@@ -244,8 +245,8 @@ class TasksFragmentTest {
     fun showCompletedTasks() {
         // Add one active task and 2 completed tasks
         repository.saveTaskBlocking(Task("TITLE1", "DESCRIPTION1"))
-        repository.saveTaskBlocking(Task("TITLE2", "DESCRIPTION2", true))
-        repository.saveTaskBlocking(Task("TITLE3", "DESCRIPTION3", true))
+        repository.saveTaskBlocking(Task("TITLE2", "DESCRIPTION2", Date(), true))
+        repository.saveTaskBlocking(Task("TITLE3", "DESCRIPTION3", Date(), true))
 
         launchActivity()
 
@@ -261,7 +262,7 @@ class TasksFragmentTest {
     fun clearCompletedTasks() {
         // Add one active task and one completed task
         repository.saveTaskBlocking(Task("TITLE1", "DESCRIPTION1"))
-        repository.saveTaskBlocking(Task("TITLE2", "DESCRIPTION2", true))
+        repository.saveTaskBlocking(Task("TITLE2", "DESCRIPTION2", Date(), true))
 
         launchActivity()
 

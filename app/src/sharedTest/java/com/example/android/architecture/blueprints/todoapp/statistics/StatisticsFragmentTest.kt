@@ -41,6 +41,7 @@ import org.junit.After
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
+import java.util.*
 
 /**
  * Integration test for the statistics screen.
@@ -86,8 +87,8 @@ class StatisticsFragmentTest {
     fun tasks_showsNonEmptyMessage() {
         // Given some tasks
         repository.apply {
-            saveTaskBlocking(Task("Title1", "Description1", false))
-            saveTaskBlocking(Task("Title2", "Description2", true))
+            saveTaskBlocking(Task("Title1", "Description1", Date(), false))
+            saveTaskBlocking(Task("Title2", "Description2", Date(), true))
         }
 
         val scenario = launchFragmentInContainer<StatisticsFragment>(Bundle(), R.style.AppTheme)
