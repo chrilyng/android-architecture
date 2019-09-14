@@ -56,9 +56,6 @@ class AddEditTaskViewModel(
     private val _snackbarText = MutableLiveData<Event<Int>>()
     val snackbarText: LiveData<Event<Int>> = _snackbarText
 
-    private val _toastText = MutableLiveData<Event<Int>>()
-    val toastText: LiveData<Event<Int>> = _toastText
-
     private val _taskUpdatedEvent = MutableLiveData<Event<Unit>>()
     val taskUpdatedEvent: LiveData<Event<Unit>> = _taskUpdatedEvent
 
@@ -134,12 +131,10 @@ class AddEditTaskViewModel(
 
         if (currentTitle == null || currentDescription == null) {
             _snackbarText.value = Event(R.string.empty_task_message)
-            _toastText.value = Event(R.string.empty_task_message)
             return
         }
         if (Task(currentTitle, currentDescription, currentRemindDate).isEmpty) {
             _snackbarText.value = Event(R.string.empty_task_message)
-            _toastText.value = Event(R.string.empty_task_message)
             return
         }
 

@@ -19,20 +19,18 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.example.android.architecture.blueprints.todoapp.EventObserver
-import dk.siit.todoschedule.R
-import dk.siit.todoschedule.databinding.AddtaskFragBinding
 import com.example.android.architecture.blueprints.todoapp.tasks.ADD_EDIT_RESULT_OK
 import com.example.android.architecture.blueprints.todoapp.util.getViewModelFactory
 import com.example.android.architecture.blueprints.todoapp.util.setupRefreshLayout
 import com.example.android.architecture.blueprints.todoapp.util.setupSnackbar
-import com.example.android.architecture.blueprints.todoapp.util.setupToast
 import com.google.android.material.snackbar.Snackbar
+import dk.siit.todoschedule.R
+import dk.siit.todoschedule.databinding.AddtaskFragBinding
 
 /**
  * Main UI for the add task screen. Users can enter a task title and description.
@@ -61,7 +59,6 @@ class AddEditTaskFragment : Fragment() {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         setupSnackbar()
-        setupToast()
         setupNavigation()
         this.setupRefreshLayout(viewDataBinding.refreshLayout)
         viewModel.start(args.taskId)
@@ -69,10 +66,6 @@ class AddEditTaskFragment : Fragment() {
 
     private fun setupSnackbar() {
         view?.setupSnackbar(this, viewModel.snackbarText, Snackbar.LENGTH_SHORT)
-    }
-
-    private fun setupToast() {
-        view?.context?.setupToast(this, viewModel.toastText, Toast.LENGTH_SHORT)
     }
 
     private fun setupNavigation() {

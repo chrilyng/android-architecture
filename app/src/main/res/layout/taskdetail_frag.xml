@@ -108,6 +108,7 @@
                         android:text="@{viewmodel.task.description}"
                         android:textAppearance="?android:attr/textAppearanceMedium" />
 
+                    <!-- TODO: add a textview with custom adapter to display the date -->
                     <!--<com.example.android.architecture.blueprints.todoapp.addedittask.AddEditTaskDatePicker-->
                         <!--android:id="@+id/task_detail_schedule_date"-->
                         <!--android:layout_width="match_parent"-->

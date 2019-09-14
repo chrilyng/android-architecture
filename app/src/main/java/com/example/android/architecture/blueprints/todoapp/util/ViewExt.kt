@@ -19,18 +19,16 @@ package com.example.android.architecture.blueprints.todoapp.util
  * Extension functions and Binding Adapters.
  */
 
-import android.content.Context
 import android.view.View
-import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.Observer
 import com.example.android.architecture.blueprints.todoapp.Event
-import dk.siit.todoschedule.R
 import com.example.android.architecture.blueprints.todoapp.ScrollChildSwipeRefreshLayout
 import com.google.android.material.snackbar.Snackbar
+import dk.siit.todoschedule.R
 
 /**
  * Transforms static java function Snackbar.make() to an extension function on View.
@@ -48,11 +46,6 @@ fun View.showSnackbar(snackbarText: String, timeLength: Int) {
         })
         show()
     }
-    Toast.makeText(this.context, snackbarText, timeLength).show()
-}
-
-fun Context.showToast(snackbarText: String, timeLength: Int) {
-    Toast.makeText(this, snackbarText, timeLength).show()
 }
 
 /**
@@ -67,18 +60,6 @@ fun View.setupSnackbar(
     snackbarEvent.observe(lifecycleOwner, Observer { event ->
         event.getContentIfNotHandled()?.let {
             showSnackbar(context.getString(it), timeLength)
-        }
-    })
-}
-
-fun Context.setupToast (
-        lifecycleOwner: LifecycleOwner,
-        toastEvent: LiveData<Event<Int>>,
-        timeLength: Int
-) {
-    toastEvent.observe(lifecycleOwner, Observer { event ->
-        event.getContentIfNotHandled()?.let {
-            showToast(getString(it), timeLength)
         }
     })
 }

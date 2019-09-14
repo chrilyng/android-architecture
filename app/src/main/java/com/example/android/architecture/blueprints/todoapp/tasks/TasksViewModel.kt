@@ -60,9 +60,6 @@ class TasksViewModel(
     private val _snackbarText = MutableLiveData<Event<Int>>()
     val snackbarText: LiveData<Event<Int>> = _snackbarText
 
-    private val _toastText = MutableLiveData<Event<Int>>()
-    val toastText: LiveData<Event<Int>> = _toastText
-
     private var _currentFiltering = TasksFilterType.ALL_TASKS
 
     // Not used at the moment
@@ -173,7 +170,6 @@ class TasksViewModel(
 
     private fun showSnackbarMessage(message: Int) {
         _snackbarText.value = Event(message)
-        _toastText.value = Event(message)
     }
 
     /**
