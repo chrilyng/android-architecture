@@ -74,14 +74,27 @@
                         android:imeOptions="flagNoExtractUi"
                         android:text="@={viewmodel.description}" />
 
-                    <com.example.android.architecture.blueprints.todoapp.addedittask.AddEditTaskDatePicker
-                        android:id="@+id/add_task_schedule_date"
+                    <TextView
+                        android:id="@+id/add_task_remind_date_text"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:paddingTop="8dp"
-                        android:year="@={viewmodel.remindYear}"
-                        android:month="@={viewmodel.remindMonth}"
-                        android:day="@={viewmodel.remindDay}"/>
+                        app:textDate="@{viewmodel.remindDate}" />
+
+                    <Button
+                        android:id="@+id/add_task_pick_remind_date_button"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        style="@style/Widget.MaterialComponents.Button.TextButton"
+                        android:textSize="20sp"
+                        android:text="@string/pick_remind_date" />
+
+                    <Button
+                        android:id="@+id/add_task_pick_remind_time_button"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        style="@style/Widget.MaterialComponents.Button.TextButton"
+                        android:textSize="20sp"
+                        android:text="@string/pick_remind_time" />
                 </LinearLayout>
             </ScrollView>
         </com.example.android.architecture.blueprints.todoapp.ScrollChildSwipeRefreshLayout>

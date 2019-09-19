@@ -16,18 +16,14 @@
 
 package com.example.android.architecture.blueprints.todoapp.addedittask
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.*
+import androidx.lifecycle.Observer
 import com.example.android.architecture.blueprints.todoapp.Event
-import dk.siit.todoschedule.R
 import com.example.android.architecture.blueprints.todoapp.data.Result.Success
 import com.example.android.architecture.blueprints.todoapp.data.Task
 import com.example.android.architecture.blueprints.todoapp.data.source.TasksRepository
+import dk.siit.todoschedule.R
 import kotlinx.coroutines.launch
-import java.text.DateFormat
-import java.text.SimpleDateFormat
 import java.util.*
 
 /**
@@ -43,12 +39,11 @@ class AddEditTaskViewModel(
     // Two-way databinding, exposing MutableLiveData
     val description = MutableLiveData<String>()
 
-    // Two-way databinding, exposing MutableLiveData
-    val remindDate = MutableLiveData<Date>()
+    val remindDate = MediatorLiveData<Date>()
 
     val remindYear = MutableLiveData<Int>()
     val remindMonth = MutableLiveData<Int>()
-    val remindDay = MutableLiveData<Int>()
+    var remindDay = MutableLiveData<Int>()
 
     private val _dataLoading = MutableLiveData<Boolean>()
     val dataLoading: LiveData<Boolean> = _dataLoading
@@ -71,6 +66,14 @@ class AddEditTaskViewModel(
         if (_dataLoading.value == true) {
             return
         }
+
+        val yearObserverFun = createSourceFunction(Calendar.YEAR)
+        val monthObserverFun = createSourceFunction(Calendar.MONTH)
+        val dayObserverFun = createSourceFunction(Calendar.DAY_OF_MONTH)
+
+        remindDate.addSource(remindYear, Observer(yearObserverFun))
+        remindDate.addSource(remindMonth, Observer(monthObserverFun))
+        remindDate.addSource(remindDay, Observer(dayObserverFun))
 
         this.taskId = taskId
         if (taskId == null) {
@@ -97,12 +100,22 @@ class AddEditTaskViewModel(
         }
     }
 
+    private fun createSourceFunction(fieldType: Int): (Int) -> Unit {
+        return fun(newFieldValue: Int) {
+            val remindCalendar = Calendar.getInstance()
+            remindDate.value?.let { remindCalendar.time = remindDate.value }
+            remindCalendar.set(fieldType, newFieldValue)
+            remindDate.value = remindCalendar.time
+        }
+    }
+
     private fun onTaskLoaded(task: Task) {
         title.value = task.title
         description.value = task.description
-        val remindDate = task.remindDate
-        var remindCalendar = Calendar.getInstance()
-        remindCalendar.time = remindDate
+        val localRemindDate = task.remindDate
+        remindDate.value = localRemindDate
+        val remindCalendar = Calendar.getInstance()
+        remindCalendar.time = localRemindDate
         remindDay.value = remindCalendar.get(Calendar.DATE)
         remindMonth.value = remindCalendar.get(Calendar.MONTH)
         remindYear.value = remindCalendar.get(Calendar.YEAR)

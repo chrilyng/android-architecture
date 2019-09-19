@@ -19,7 +19,9 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
@@ -43,9 +45,11 @@ class AddEditTaskFragment : Fragment() {
 
     private val viewModel by viewModels<AddEditTaskViewModel> { getViewModelFactory() }
 
+    private lateinit var localChildFragmentManager: FragmentManager
+
     override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
+            inflater: LayoutInflater, container: ViewGroup?,
+            savedInstanceState: Bundle?
     ): View? {
         val root = inflater.inflate(R.layout.addtask_frag, container, false)
         viewDataBinding = AddtaskFragBinding.bind(root).apply {
@@ -53,13 +57,29 @@ class AddEditTaskFragment : Fragment() {
         }
         // Set the lifecycle owner to the lifecycle of the view
         viewDataBinding.lifecycleOwner = this.viewLifecycleOwner
+
+//        val dayObserverFun = fun(newDay: Int)
+//        {
+//            var remindCalendar = Calendar.getInstance()
+//            remindCalendar.time = viewModel.remindDate.value
+//            remindCalendar.set(Calendar.DAY_OF_MONTH, newDay)
+//            viewModel.remindDate.value = remindCalendar.time
+//        }
+//
+//        val dayObserver = Observer(dayObserverFun)
+//
+//        viewModel.remindDay.observe(this, dayObserver)
+
         return viewDataBinding.root
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
+        localChildFragmentManager = requireFragmentManager()
         setupSnackbar()
         setupNavigation()
+        setupDatePickerButton()
+        setupTimePickerButton()
         this.setupRefreshLayout(viewDataBinding.refreshLayout)
         viewModel.start(args.taskId)
     }
@@ -71,8 +91,32 @@ class AddEditTaskFragment : Fragment() {
     private fun setupNavigation() {
         viewModel.taskUpdatedEvent.observe(this, EventObserver {
             val action = AddEditTaskFragmentDirections
-                .actionAddEditTaskFragmentToTasksFragment(ADD_EDIT_RESULT_OK)
+                    .actionAddEditTaskFragmentToTasksFragment(ADD_EDIT_RESULT_OK)
             findNavController().navigate(action)
         })
+    }
+
+    private fun showDatePickerDialog() {
+        TaskDatePickerFragment(viewModel).show(childFragmentManager, "datePicker")
+    }
+
+    private fun setupDatePickerButton() {
+        activity?.findViewById<Button>(R.id.add_task_pick_remind_date_button)?.let {
+            it.setOnClickListener {
+                showDatePickerDialog()
+            }
+        }
+    }
+
+    private fun showTimePickerDialog() {
+        TaskTimePickerFragment().show(childFragmentManager, "timePicker")
+    }
+
+    private fun setupTimePickerButton() {
+        activity?.findViewById<Button>(R.id.add_task_pick_remind_time_button)?.let {
+            it.setOnClickListener {
+                showTimePickerDialog()
+            }
+        }
     }
 }

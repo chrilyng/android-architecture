@@ -63,4 +63,6 @@
     <string name="no_tasks_image_content_description">No tasks image</string>
 
     <string name="empty_date">Empty date</string>
+    <string name="pick_remind_date">Pick date</string>
+    <string name="pick_remind_time">Pick time</string>
 </resources>
