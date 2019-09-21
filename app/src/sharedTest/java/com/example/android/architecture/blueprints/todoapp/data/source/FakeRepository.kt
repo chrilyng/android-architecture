@@ -20,7 +20,7 @@ import com.example.android.architecture.blueprints.todoapp.data.Result
 import com.example.android.architecture.blueprints.todoapp.data.Result.Error
 import com.example.android.architecture.blueprints.todoapp.data.Result.Success
 import com.example.android.architecture.blueprints.todoapp.data.Task
-import java.util.LinkedHashMap
+import java.util.*
 
 /**
  * Implementation of a remote data source with static access to the data for easy testing.
@@ -57,7 +57,7 @@ class FakeRepository : TasksRepository {
     }
 
     override suspend fun completeTask(task: Task) {
-        val completedTask = Task(task.title, task.description, true, task.id)
+        val completedTask = Task(task.title, task.description, Date(), true, task.id)
         tasksServiceData[task.id] = completedTask
     }
 
@@ -67,7 +67,7 @@ class FakeRepository : TasksRepository {
     }
 
     override suspend fun activateTask(task: Task) {
-        val activeTask = Task(task.title, task.description, false, task.id)
+        val activeTask = Task(task.title, task.description, Date(), false, task.id)
         tasksServiceData[task.id] = activeTask
     }
 

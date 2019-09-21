@@ -19,36 +19,26 @@ import androidx.test.core.app.ActivityScenario
 import androidx.test.core.app.ApplicationProvider.getApplicationContext
 import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.IdlingRegistry
-import androidx.test.espresso.action.ViewActions.click
-import androidx.test.espresso.action.ViewActions.closeSoftKeyboard
-import androidx.test.espresso.action.ViewActions.replaceText
-import androidx.test.espresso.action.ViewActions.typeText
+import androidx.test.espresso.action.ViewActions.*
 import androidx.test.espresso.assertion.ViewAssertions.doesNotExist
 import androidx.test.espresso.assertion.ViewAssertions.matches
-import androidx.test.espresso.matcher.ViewMatchers.hasSibling
-import androidx.test.espresso.matcher.ViewMatchers.isChecked
-import androidx.test.espresso.matcher.ViewMatchers.isDisplayed
-import androidx.test.espresso.matcher.ViewMatchers.withContentDescription
-import androidx.test.espresso.matcher.ViewMatchers.withId
-import androidx.test.espresso.matcher.ViewMatchers.withText
+import androidx.test.espresso.matcher.ViewMatchers.*
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.filters.LargeTest
-import com.example.android.architecture.blueprints.todoapp.R
-import com.example.android.architecture.blueprints.todoapp.R.string
 import com.example.android.architecture.blueprints.todoapp.ServiceLocator
 import com.example.android.architecture.blueprints.todoapp.data.Task
 import com.example.android.architecture.blueprints.todoapp.data.source.TasksRepository
-import com.example.android.architecture.blueprints.todoapp.util.DataBindingIdlingResource
-import com.example.android.architecture.blueprints.todoapp.util.EspressoIdlingResource
-import com.example.android.architecture.blueprints.todoapp.util.deleteAllTasksBlocking
-import com.example.android.architecture.blueprints.todoapp.util.monitorActivity
-import com.example.android.architecture.blueprints.todoapp.util.saveTaskBlocking
+import com.example.android.architecture.blueprints.todoapp.util.*
+import dk.siit.todoschedule.R
+import dk.siit.todoschedule.R.string
 import org.hamcrest.Matchers.allOf
+import org.hamcrest.Matchers.containsString
 import org.hamcrest.core.IsNot.not
 import org.junit.After
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
+import java.util.*
 
 /**
  * Large End-to-End test for the tasks module.
@@ -128,12 +118,44 @@ class TasksActivityTest {
         // Add active task
         onView(withId(R.id.add_task_fab)).perform(click())
         onView(withId(R.id.add_task_title_edit_text))
-            .perform(typeText("TITLE1"), closeSoftKeyboard())
+                .perform(typeText("TITLE1"), closeSoftKeyboard())
         onView(withId(R.id.add_task_description_edit_text)).perform(typeText("DESCRIPTION"))
         onView(withId(R.id.save_task_fab)).perform(click())
 
         // Open it in details view
         onView(withText("TITLE1")).perform(click())
+        // Check no remind date picked
+        onView(withText(string.empty_date)).check(matches(isDisplayed()))
+        // Click delete task in menu
+        onView(withId(R.id.menu_delete)).perform(click())
+
+        // Verify it was deleted
+        onView(withId(R.id.menu_filter)).perform(click())
+        onView(withText(string.nav_all)).perform(click())
+        onView(withText("TITLE1")).check(doesNotExist())
+    }
+
+    @Test
+    fun createOneTaskReminder_deleteTask() {
+
+        // start up Tasks screen
+        val activityScenario = ActivityScenario.launch(TasksActivity::class.java)
+        dataBindingIdlingResource.monitorActivity(activityScenario)
+
+        // Add active task
+        onView(withId(R.id.add_task_fab)).perform(click())
+        onView(withId(R.id.add_task_title_edit_text))
+                .perform(typeText("TITLE1"), closeSoftKeyboard())
+        onView(withId(R.id.add_task_description_edit_text)).perform(typeText("DESCRIPTION"))
+        onView(withId(R.id.add_task_remind_date_text)).perform(click())
+        // just use current default date
+        onView(withText(android.R.string.ok)).perform(click())
+        onView(withId(R.id.save_task_fab)).perform(click())
+
+        // Open it in details view
+        onView(withText("TITLE1")).perform(click())
+        // we picked current default date and we check the year is the same
+        onView(withText(containsString(Calendar.getInstance().get(Calendar.YEAR).toString()))).check(matches(isDisplayed()))
         // Click delete task in menu
         onView(withId(R.id.menu_delete)).perform(click())
 
@@ -182,21 +204,21 @@ class TasksActivityTest {
 
         // Click on the navigation up button to go back to the list
         onView(
-            withContentDescription(
-                activityScenario.getToolbarNavigationContentDescription()
-            )
+                withContentDescription(
+                        activityScenario.getToolbarNavigationContentDescription()
+                )
         ).perform(click())
 
         // Check that the task is marked as completed
         onView(allOf(withId(R.id.complete_checkbox), hasSibling(withText(taskTitle))))
-            .check(matches(isChecked()))
+                .check(matches(isChecked()))
     }
 
     @Test
     fun markTaskAsActiveOnDetailScreen_taskIsActiveInList() {
         // Add 1 completed task
         val taskTitle = "ACTIVE"
-        repository.saveTaskBlocking(Task(taskTitle, "DESCRIPTION", true))
+        repository.saveTaskBlocking(Task(taskTitle, "DESCRIPTION", Date(), true))
 
         // start up Tasks screen
         val activityScenario = ActivityScenario.launch(TasksActivity::class.java)
@@ -209,14 +231,14 @@ class TasksActivityTest {
 
         // Click on the navigation up button to go back to the list
         onView(
-            withContentDescription(
-                activityScenario.getToolbarNavigationContentDescription()
-            )
+                withContentDescription(
+                        activityScenario.getToolbarNavigationContentDescription()
+                )
         ).perform(click())
 
         // Check that the task is marked as active
         onView(allOf(withId(R.id.complete_checkbox), hasSibling(withText(taskTitle))))
-            .check(matches(not(isChecked())))
+                .check(matches(not(isChecked())))
     }
 
     @Test
@@ -238,21 +260,21 @@ class TasksActivityTest {
 
         // Click on the navigation up button to go back to the list
         onView(
-            withContentDescription(
-                activityScenario.getToolbarNavigationContentDescription()
-            )
+                withContentDescription(
+                        activityScenario.getToolbarNavigationContentDescription()
+                )
         ).perform(click())
 
         // Check that the task is marked as active
         onView(allOf(withId(R.id.complete_checkbox), hasSibling(withText(taskTitle))))
-            .check(matches(not(isChecked())))
+                .check(matches(not(isChecked())))
     }
 
     @Test
     fun markTaskAsActiveAndCompleteOnDetailScreen_taskIsCompleteInList() {
         // Add 1 completed task
         val taskTitle = "COMP-ACT"
-        repository.saveTaskBlocking(Task(taskTitle, "DESCRIPTION", true))
+        repository.saveTaskBlocking(Task(taskTitle, "DESCRIPTION", Date(), true))
 
         // start up Tasks screen
         val activityScenario = ActivityScenario.launch(TasksActivity::class.java)
@@ -267,14 +289,14 @@ class TasksActivityTest {
 
         // Click on the navigation up button to go back to the list
         onView(
-            withContentDescription(
-                activityScenario.getToolbarNavigationContentDescription()
-            )
+                withContentDescription(
+                        activityScenario.getToolbarNavigationContentDescription()
+                )
         ).perform(click())
 
         // Check that the task is marked as active
         onView(allOf(withId(R.id.complete_checkbox), hasSibling(withText(taskTitle))))
-            .check(matches(isChecked()))
+                .check(matches(isChecked()))
     }
 
     @Test
@@ -286,7 +308,7 @@ class TasksActivityTest {
         // Click on the "+" button, add details, and save
         onView(withId(R.id.add_task_fab)).perform(click())
         onView(withId(R.id.add_task_title_edit_text))
-            .perform(typeText("title"), closeSoftKeyboard())
+                .perform(typeText("title"), closeSoftKeyboard())
         onView(withId(R.id.add_task_description_edit_text)).perform(typeText("description"))
         onView(withId(R.id.save_task_fab)).perform(click())
 

@@ -35,6 +35,7 @@ import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
+import java.util.*
 
 /**
  * Integration test for the [TasksDataSource].
@@ -78,7 +79,7 @@ class TasksLocalDataSourceTest {
     @Test
     fun saveTask_retrievesTask() = runBlockingTest {
         // GIVEN - a new task saved in the database
-        val newTask = Task("title", "description", true)
+        val newTask = Task("title", "description", Date(), true)
         localDataSource.saveTask(newTask)
 
         // WHEN  - Task retrieved by ID
@@ -112,7 +113,7 @@ class TasksLocalDataSourceTest {
     @Test
     fun activateTask_retrievedTaskIsActive() = runBlockingTest {
         // Given a new completed task in the persistent repository
-        val newTask = Task("Some title", "Some description", true)
+        val newTask = Task("Some title", "Some description", Date(), true)
         localDataSource.saveTask(newTask)
 
         localDataSource.activateTask(newTask)

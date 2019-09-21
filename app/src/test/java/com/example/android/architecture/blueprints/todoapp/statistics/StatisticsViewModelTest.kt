@@ -29,6 +29,7 @@ import kotlinx.coroutines.test.runBlockingTest
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
+import java.util.*
 
 /**
  * Unit tests for the implementation of [StatisticsViewModel]
@@ -71,9 +72,9 @@ class StatisticsViewModelTest {
     fun loadNonEmptyTasksFromRepository_NonEmptyResults() {
         // We initialise the tasks to 3, with one active and two completed
         val task1 = Task("Title1", "Description1")
-        val task2 = Task("Title2", "Description2", true)
-        val task3 = Task("Title3", "Description3", true)
-        val task4 = Task("Title4", "Description4", true)
+        val task2 = Task("Title2", "Description2", Date(), true)
+        val task3 = Task("Title3", "Description3", Date(), true)
+        val task4 = Task("Title4", "Description4", Date(), true)
         tasksRepository.addTasks(task1, task2, task3, task4)
 
         // When loading of Tasks is requested

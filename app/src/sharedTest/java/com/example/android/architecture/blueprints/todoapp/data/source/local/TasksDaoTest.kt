@@ -33,6 +33,7 @@ import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
+import java.util.*
 
 @ExperimentalCoroutinesApi
 @RunWith(AndroidJUnit4::class)
@@ -87,7 +88,7 @@ class TasksDaoTest {
         database.taskDao().insertTask(task)
 
         // When a task with the same id is inserted
-        val newTask = Task("title2", "description2", true, task.id)
+        val newTask = Task("title2", "description2", Date(), true, task.id)
         database.taskDao().insertTask(newTask)
 
         // THEN - The loaded data contains the expected values
@@ -122,7 +123,7 @@ class TasksDaoTest {
         database.taskDao().insertTask(originalTask)
 
         // When the task is updated
-        val updatedTask = Task("new title", "new description", true, originalTask.id)
+        val updatedTask = Task("new title", "new description", Date(), true, originalTask.id)
         database.taskDao().updateTask(updatedTask)
 
         // THEN - The loaded data contains the expected values
@@ -136,7 +137,7 @@ class TasksDaoTest {
     @Test
     fun updateCompletedAndGetById() = runBlockingTest {
         // When inserting a task
-        val task = Task("title", "description", true)
+        val task = Task("title", "description", Date(), true)
         database.taskDao().insertTask(task)
 
         // When the task is updated
@@ -180,7 +181,7 @@ class TasksDaoTest {
     @Test
     fun deleteCompletedTasksAndGettingTasks() = runBlockingTest {
         // Given a completed task inserted
-        database.taskDao().insertTask(Task("completed", "task", true))
+        database.taskDao().insertTask(Task("completed", "task", Date(), true))
 
         // When deleting completed tasks
         database.taskDao().deleteCompletedTasks()

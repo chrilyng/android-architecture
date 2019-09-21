@@ -19,7 +19,7 @@ package com.example.android.architecture.blueprints.todoapp.tasks
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import com.example.android.architecture.blueprints.todoapp.LiveDataTestUtil
 import com.example.android.architecture.blueprints.todoapp.MainCoroutineRule
-import com.example.android.architecture.blueprints.todoapp.R
+import dk.siit.todoschedule.R
 import com.example.android.architecture.blueprints.todoapp.assertLiveDataEventTriggered
 import com.example.android.architecture.blueprints.todoapp.assertSnackbarMessage
 import com.example.android.architecture.blueprints.todoapp.data.Task
@@ -30,6 +30,7 @@ import kotlinx.coroutines.test.runBlockingTest
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
+import java.util.*
 
 /**
  * Unit tests for the implementation of [TasksViewModel]
@@ -57,8 +58,8 @@ class TasksViewModelTest {
         // We initialise the tasks to 3, with one active and two completed
         tasksRepository = FakeRepository()
         val task1 = Task("Title1", "Description1")
-        val task2 = Task("Title2", "Description2", true)
-        val task3 = Task("Title3", "Description3", true)
+        val task2 = Task("Title2", "Description2", Date(), true)
+        val task3 = Task("Title3", "Description3", Date(), true)
         tasksRepository.addTasks(task1, task2, task3)
 
         tasksViewModel = TasksViewModel(tasksRepository)
@@ -237,7 +238,7 @@ class TasksViewModelTest {
     @Test
     fun activateTask_dataAndSnackbarUpdated() {
         // With a repository that has a completed task
-        val task = Task("Title", "Description", true)
+        val task = Task("Title", "Description", Date(), true)
         tasksRepository.addTasks(task)
 
         // Activate task

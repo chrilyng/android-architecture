@@ -18,7 +18,7 @@ package com.example.android.architecture.blueprints.todoapp.addedittask
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import com.example.android.architecture.blueprints.todoapp.LiveDataTestUtil.getValue
 import com.example.android.architecture.blueprints.todoapp.MainCoroutineRule
-import com.example.android.architecture.blueprints.todoapp.R.string
+import dk.siit.todoschedule.R.string
 import com.example.android.architecture.blueprints.todoapp.assertSnackbarMessage
 import com.example.android.architecture.blueprints.todoapp.data.Task
 import com.example.android.architecture.blueprints.todoapp.data.source.FakeRepository
@@ -27,6 +27,7 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
+import java.util.*
 
 /**
  * Unit tests for the implementation of [AddEditTaskViewModel].
@@ -49,7 +50,7 @@ class AddEditTaskViewModelTest {
     @get:Rule
     var instantExecutorRule = InstantTaskExecutorRule()
 
-    private val task = Task("Title1", "Description1")
+    private val task = Task("Title1", "Description1", Date())
 
     @Before
     fun setupViewModel() {

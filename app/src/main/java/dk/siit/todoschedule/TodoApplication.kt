@@ -14,9 +14,10 @@
  * limitations under the License.
  */
 
-package com.example.android.architecture.blueprints.todoapp
+package dk.siit.todoschedule
 
 import android.app.Application
+import com.example.android.architecture.blueprints.todoapp.ServiceLocator
 import com.example.android.architecture.blueprints.todoapp.data.source.TasksRepository
 import timber.log.Timber
 import timber.log.Timber.DebugTree
