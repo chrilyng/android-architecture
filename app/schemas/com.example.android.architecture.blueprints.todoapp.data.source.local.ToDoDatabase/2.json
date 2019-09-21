@@ -2,11 +2,11 @@
   "formatVersion": 1,
   "database": {
     "version": 2,
-    "identityHash": "71bb149c0fed8c28a692ca10652dacb6",
+    "identityHash": "07c4e8651540917446c420c98513be0e",
     "entities": [
       {
         "tableName": "tasks",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`title` TEXT NOT NULL, `description` TEXT NOT NULL, `reminddate` INTEGER NOT NULL, `completed` INTEGER NOT NULL, `entryid` TEXT NOT NULL, PRIMARY KEY(`entryid`))",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`title` TEXT NOT NULL, `description` TEXT NOT NULL, `reminddate` INTEGER, `completed` INTEGER NOT NULL, `entryid` TEXT NOT NULL, PRIMARY KEY(`entryid`))",
         "fields": [
           {
             "fieldPath": "title",
@@ -24,7 +24,7 @@
             "fieldPath": "remindDate",
             "columnName": "reminddate",
             "affinity": "INTEGER",
-            "notNull": true
+            "notNull": false
           },
           {
             "fieldPath": "isCompleted",
@@ -52,7 +52,7 @@
     "views": [],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '71bb149c0fed8c28a692ca10652dacb6')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '07c4e8651540917446c420c98513be0e')"
     ]
   }
 }

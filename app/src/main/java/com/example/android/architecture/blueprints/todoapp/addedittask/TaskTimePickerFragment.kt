@@ -3,11 +3,13 @@ package com.example.android.architecture.blueprints.todoapp.addedittask
 import android.app.Dialog
 import android.app.TimePickerDialog
 import android.os.Bundle
+import android.text.format.DateFormat
 import android.widget.TimePicker
 import androidx.fragment.app.DialogFragment
 import java.util.*
 
-class TaskTimePickerFragment : DialogFragment(), TimePickerDialog.OnTimeSetListener {
+class TaskTimePickerFragment constructor(viewModelParameter: AddEditTaskViewModel) : DialogFragment(), TimePickerDialog.OnTimeSetListener {
+    private val viewModel = viewModelParameter
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         // Use the current time as the default values for the picker
@@ -16,10 +18,11 @@ class TaskTimePickerFragment : DialogFragment(), TimePickerDialog.OnTimeSetListe
         val minute = c.get(Calendar.MINUTE)
 
         // Create a new instance of TimePickerDialog and return it
-        return TimePickerDialog(activity, this, hour, minute, true)
+        return TimePickerDialog(activity, this, hour, minute, DateFormat.is24HourFormat(context))
     }
 
     override fun onTimeSet(view: TimePicker, hourOfDay: Int, minute: Int) {
-        // Do something with the time chosen by the user
+        viewModel.remindHour.value = hourOfDay
+        viewModel.remindMinute.value = minute
     }
 }

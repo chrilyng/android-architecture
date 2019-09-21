@@ -30,7 +30,7 @@ import java.util.*
  * ViewModel for the Add/Edit screen.
  */
 class AddEditTaskViewModel(
-    private val tasksRepository: TasksRepository
+        private val tasksRepository: TasksRepository
 ) : ViewModel() {
 
     // Two-way databinding, exposing MutableLiveData
@@ -44,6 +44,8 @@ class AddEditTaskViewModel(
     val remindYear = MutableLiveData<Int>()
     val remindMonth = MutableLiveData<Int>()
     var remindDay = MutableLiveData<Int>()
+    val remindHour = MutableLiveData<Int>()
+    var remindMinute = MutableLiveData<Int>()
 
     private val _dataLoading = MutableLiveData<Boolean>()
     val dataLoading: LiveData<Boolean> = _dataLoading
@@ -70,10 +72,14 @@ class AddEditTaskViewModel(
         val yearObserverFun = createSourceFunction(Calendar.YEAR)
         val monthObserverFun = createSourceFunction(Calendar.MONTH)
         val dayObserverFun = createSourceFunction(Calendar.DAY_OF_MONTH)
+        val hourObserverFun = createSourceFunction(Calendar.HOUR_OF_DAY)
+        val minuteObserverFun = createSourceFunction(Calendar.MINUTE)
 
         remindDate.addSource(remindYear, Observer(yearObserverFun))
         remindDate.addSource(remindMonth, Observer(monthObserverFun))
         remindDate.addSource(remindDay, Observer(dayObserverFun))
+        remindDate.addSource(remindHour, Observer(hourObserverFun))
+        remindDate.addSource(remindMinute, Observer(minuteObserverFun))
 
         this.taskId = taskId
         if (taskId == null) {
@@ -100,6 +106,14 @@ class AddEditTaskViewModel(
         }
     }
 
+    fun stop() {
+        remindDate.removeSource(remindYear)
+        remindDate.removeSource(remindMonth)
+        remindDate.removeSource(remindDate)
+        remindDate.removeSource(remindHour)
+        remindDate.removeSource(remindMinute)
+    }
+
     private fun createSourceFunction(fieldType: Int): (Int) -> Unit {
         return fun(newFieldValue: Int) {
             val remindCalendar = Calendar.getInstance()
@@ -115,10 +129,14 @@ class AddEditTaskViewModel(
         val localRemindDate = task.remindDate
         remindDate.value = localRemindDate
         val remindCalendar = Calendar.getInstance()
-        remindCalendar.time = localRemindDate
-        remindDay.value = remindCalendar.get(Calendar.DATE)
-        remindMonth.value = remindCalendar.get(Calendar.MONTH)
-        remindYear.value = remindCalendar.get(Calendar.YEAR)
+        localRemindDate?.let {
+            remindCalendar.time = localRemindDate
+            remindYear.value = remindCalendar.get(Calendar.YEAR)
+            remindMonth.value = remindCalendar.get(Calendar.MONTH)
+            remindDay.value = remindCalendar.get(Calendar.DAY_OF_MONTH)
+            remindHour.value = remindCalendar.get(Calendar.HOUR_OF_DAY)
+            remindMinute.value = remindCalendar.get(Calendar.MINUTE)
+        }
 
         taskCompleted = task.isCompleted
         _dataLoading.value = false
@@ -137,10 +155,26 @@ class AddEditTaskViewModel(
         val currentRemindYear = remindYear.value
         val currentRemindMonth = remindMonth.value
         val currentRemindDay = remindDay.value
+        val currentRemindHour = remindHour.value
+        val currentRemindMinute = remindMinute.value
 
-        var currentRemindDate = Date()
-        if (currentRemindDay != null && currentRemindMonth != null && currentRemindYear != null)
-            currentRemindDate = GregorianCalendar(currentRemindYear, currentRemindMonth, currentRemindDay).time
+        val currentCalendar = Calendar.getInstance()
+
+        var calendarUpdated = false
+        if (currentRemindDay != null && currentRemindMonth != null && currentRemindYear != null) {
+            currentCalendar.set(currentRemindYear, currentRemindMonth, currentRemindDay)
+            calendarUpdated = true
+        }
+
+        if (currentRemindHour != null && currentRemindMinute != null) {
+            currentCalendar.set(Calendar.HOUR_OF_DAY, currentRemindHour)
+            currentCalendar.set(Calendar.MINUTE, currentRemindMinute)
+            calendarUpdated = true
+        }
+
+        var currentRemindDate: Date? = null
+        if (calendarUpdated)
+            currentRemindDate = currentCalendar.time
 
         if (currentTitle == null || currentDescription == null) {
             _snackbarText.value = Event(R.string.empty_task_message)

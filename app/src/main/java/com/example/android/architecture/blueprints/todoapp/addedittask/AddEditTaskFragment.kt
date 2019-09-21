@@ -19,7 +19,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
+import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.viewModels
@@ -58,18 +58,6 @@ class AddEditTaskFragment : Fragment() {
         // Set the lifecycle owner to the lifecycle of the view
         viewDataBinding.lifecycleOwner = this.viewLifecycleOwner
 
-//        val dayObserverFun = fun(newDay: Int)
-//        {
-//            var remindCalendar = Calendar.getInstance()
-//            remindCalendar.time = viewModel.remindDate.value
-//            remindCalendar.set(Calendar.DAY_OF_MONTH, newDay)
-//            viewModel.remindDate.value = remindCalendar.time
-//        }
-//
-//        val dayObserver = Observer(dayObserverFun)
-//
-//        viewModel.remindDay.observe(this, dayObserver)
-
         return viewDataBinding.root
     }
 
@@ -82,6 +70,11 @@ class AddEditTaskFragment : Fragment() {
         setupTimePickerButton()
         this.setupRefreshLayout(viewDataBinding.refreshLayout)
         viewModel.start(args.taskId)
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        viewModel.stop()
     }
 
     private fun setupSnackbar() {
@@ -101,7 +94,7 @@ class AddEditTaskFragment : Fragment() {
     }
 
     private fun setupDatePickerButton() {
-        activity?.findViewById<Button>(R.id.add_task_pick_remind_date_button)?.let {
+        activity?.findViewById<TextView>(R.id.add_task_remind_date_text)?.let {
             it.setOnClickListener {
                 showDatePickerDialog()
             }
@@ -109,11 +102,11 @@ class AddEditTaskFragment : Fragment() {
     }
 
     private fun showTimePickerDialog() {
-        TaskTimePickerFragment().show(childFragmentManager, "timePicker")
+        TaskTimePickerFragment(viewModel).show(childFragmentManager, "timePicker")
     }
 
     private fun setupTimePickerButton() {
-        activity?.findViewById<Button>(R.id.add_task_pick_remind_time_button)?.let {
+        activity?.findViewById<TextView>(R.id.add_task_remind_time_text)?.let {
             it.setOnClickListener {
                 showTimePickerDialog()
             }

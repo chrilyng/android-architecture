@@ -55,8 +55,8 @@ object ServiceLocator {
 
     private fun createDataBase(context: Context): ToDoDatabase {
         val result = Room.databaseBuilder(
-            context.applicationContext,
-            ToDoDatabase::class.java, "Tasks.db"
+                context.applicationContext,
+                ToDoDatabase::class.java, "Tasks.db"
         ).addMigrations(ToDoDatabase.MIGRATION_1_2).build()
         database = result
         return result
