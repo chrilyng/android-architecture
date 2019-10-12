@@ -17,8 +17,12 @@
 package dk.siit.todoschedule
 
 import android.app.Application
-import com.example.android.architecture.blueprints.todoapp.ServiceLocator
+import com.example.android.architecture.blueprints.todoapp.RepositoryModule
 import com.example.android.architecture.blueprints.todoapp.data.source.TasksRepository
+import org.koin.android.ext.android.inject
+import org.koin.android.ext.koin.androidContext
+import org.koin.android.ext.koin.androidLogger
+import org.koin.core.context.startKoin
 import timber.log.Timber
 import timber.log.Timber.DebugTree
 
@@ -30,12 +34,20 @@ import timber.log.Timber.DebugTree
  */
 class TodoApplication : Application() {
 
-    // Depends on the flavor,
-    val taskRepository: TasksRepository
-        get() = ServiceLocator.provideTasksRepository(this)
+    // Injects the mock/production repository depending on build flavor
+    val taskRepository: TasksRepository by inject()
 
     override fun onCreate() {
         super.onCreate()
         if (BuildConfig.DEBUG) Timber.plant(DebugTree())
+
+        val repositoryModule = RepositoryModule.createRepositoryModule(this@TodoApplication)
+
+        startKoin {
+            androidLogger()
+            androidContext(this@TodoApplication)
+            modules(repositoryModule)
+        }
     }
+
 }

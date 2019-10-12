@@ -169,4 +169,7 @@ dependencies {
     // Kotlin
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlinVersion"
     implementation "androidx.fragment:fragment-ktx:$fragmentKtxVersion"
+
+    // Koin for Android apps
+    implementation 'org.koin:koin-android:2.0.1'
 }
