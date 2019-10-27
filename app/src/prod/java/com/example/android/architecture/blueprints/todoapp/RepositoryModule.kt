@@ -8,6 +8,7 @@ import com.example.android.architecture.blueprints.todoapp.data.source.TasksRepo
 import com.example.android.architecture.blueprints.todoapp.data.source.local.TasksLocalDataSource
 import com.example.android.architecture.blueprints.todoapp.data.source.local.ToDoDatabase
 import com.example.android.architecture.blueprints.todoapp.data.source.remote.TasksRemoteDataSource
+import dk.siit.todoschedule.data.source.SimpleLocalTasksRepository
 import org.koin.core.module.Module
 import org.koin.dsl.module
 
@@ -19,7 +20,7 @@ object RepositoryModule {
             }
 
             factory {
-                DefaultTasksRepository(TasksRemoteDataSource, get()) as TasksRepository
+                SimpleLocalTasksRepository(get()) as TasksRepository
             }
         }
     }

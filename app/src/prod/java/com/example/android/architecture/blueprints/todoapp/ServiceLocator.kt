@@ -19,12 +19,12 @@ package com.example.android.architecture.blueprints.todoapp
 import android.content.Context
 import androidx.annotation.VisibleForTesting
 import androidx.room.Room
-import com.example.android.architecture.blueprints.todoapp.data.source.DefaultTasksRepository
 import com.example.android.architecture.blueprints.todoapp.data.source.TasksDataSource
 import com.example.android.architecture.blueprints.todoapp.data.source.TasksRepository
 import com.example.android.architecture.blueprints.todoapp.data.source.local.TasksLocalDataSource
 import com.example.android.architecture.blueprints.todoapp.data.source.local.ToDoDatabase
 import com.example.android.architecture.blueprints.todoapp.data.source.remote.TasksRemoteDataSource
+import dk.siit.todoschedule.data.source.SimpleLocalTasksRepository
 import kotlinx.coroutines.runBlocking
 
 /**
@@ -46,7 +46,7 @@ object ServiceLocator {
     }
 
     private fun createTasksRepository(context: Context): TasksRepository {
-        return DefaultTasksRepository(TasksRemoteDataSource, createTaskLocalDataSource(context))
+        return SimpleLocalTasksRepository(createTaskLocalDataSource(context))
     }
 
     private fun createTaskLocalDataSource(context: Context): TasksDataSource {
