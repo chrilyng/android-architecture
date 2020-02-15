@@ -16,7 +16,6 @@
 package com.example.android.architecture.blueprints.todoapp.tasks
 
 import androidx.test.core.app.ActivityScenario
-import androidx.test.core.app.ApplicationProvider.getApplicationContext
 import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.IdlingRegistry
 import androidx.test.espresso.action.ViewActions.*
@@ -38,6 +37,8 @@ import org.junit.After
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
+import org.koin.core.KoinComponent
+import org.koin.core.get
 import java.util.*
 
 /**
@@ -45,7 +46,7 @@ import java.util.*
  */
 @RunWith(AndroidJUnit4::class)
 @LargeTest
-class TasksActivityTest {
+class TasksActivityTest : KoinComponent {
 
     private lateinit var repository: TasksRepository
 
@@ -54,7 +55,7 @@ class TasksActivityTest {
 
     @Before
     fun init() {
-        repository = ServiceLocator.provideTasksRepository(getApplicationContext())
+        repository = get()
         repository.deleteAllTasksBlocking()
     }
 

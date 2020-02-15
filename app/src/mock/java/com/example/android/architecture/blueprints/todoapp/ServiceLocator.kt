@@ -66,15 +66,9 @@ object ServiceLocator {
     fun resetRepository() {
         synchronized(lock) {
             runBlocking {
+                // Clear data to avoid test pollution.
                 FakeTasksRemoteDataSource.deleteAllTasks()
             }
-            // Clear all data to avoid test pollution.
-            database?.apply {
-                clearAllTables()
-                close()
-            }
-            database = null
-            tasksRepository = null
         }
     }
 }
